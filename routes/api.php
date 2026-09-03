@@ -41,7 +41,7 @@ Route::prefix('auth')->group(function () {
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
         ->middleware('throttle:6,1');
     Route::post('reset-password', [NewPasswordController::class, 'store']);
-    Route::get('me', CurrentUserController::class)->middleware('auth:sanctum');
+    Route::get('me', CurrentUserController::class);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('email/verify/{id}/{hash}', VerifyEmailController::class)
