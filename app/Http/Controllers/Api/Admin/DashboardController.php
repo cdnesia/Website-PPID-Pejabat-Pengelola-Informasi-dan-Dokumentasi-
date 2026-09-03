@@ -15,9 +15,14 @@ class DashboardController extends Controller
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        // strftime() is SQLite-specific; swap for DATE_FORMAT() when moving to MySQL/Postgres.
+        $monthExpression = match (DB::connection()->getDriverName()) {
+            'mysql' => "DATE_FORMAT(created_at, '%Y-%m')",
+            'pgsql' => "TO_CHAR(created_at, 'YYYY-MM')",
+            default => "strftime('%Y-%m', created_at)",
+        };
+
         $monthlyTrend = InformationRequest::query()
-            ->selectRaw("strftime('%Y-%m', created_at) as month, count(*) as total")
+            ->selectRaw("{$monthExpression} as month, count(*) as total")
             ->where('created_at', '>=', now()->subMonths(11)->startOfMonth())
             ->groupBy('month')
             ->orderBy('month')
