@@ -92,7 +92,7 @@ const stats = [
                     akuntabilitas layanan kepada masyarakat.
                 </p>
                 <form class="hero-fade-up mx-auto mt-8 flex max-w-lg gap-2" style="animation-delay: 240ms" @submit.prevent="submitSearch">
-                    <div class="relative flex-1">
+                    <div class="relative min-w-0 flex-1">
                         <Search class="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             v-model="searchQuery"
@@ -100,7 +100,7 @@ const stats = [
                             class="h-12 border-0 bg-white pl-10 text-foreground shadow-md placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-secondary"
                         />
                     </div>
-                    <Button type="submit" size="lg" variant="secondary" class="shadow-md">Cari</Button>
+                    <Button type="submit" size="lg" variant="secondary" class="h-12 shrink-0 px-6 shadow-md">Cari</Button>
                 </form>
 
                 <div
