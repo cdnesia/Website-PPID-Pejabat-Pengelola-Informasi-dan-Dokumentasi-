@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/stores/auth';
 import PublicLayout from '@/layouts/PublicLayout.vue';
@@ -9,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { ArrowRight, FileSearch } from '@lucide/vue';
 
 const auth = useAuthStore();
 
@@ -92,7 +94,7 @@ async function submit() {
                 </CardHeader>
             </Card>
 
-            <form v-else v-reveal class="space-y-5" @submit.prevent="submit">
+            <form v-else v-reveal class="space-y-5 rounded-2xl border border-border bg-card p-6 shadow-sm" @submit.prevent="submit">
                 <div>
                     <Label for="request_number">Nomor Permohonan</Label>
                     <Input id="request_number" v-model="form.request_number" placeholder="PPID-2026-0001" class="mt-1" required />
@@ -101,7 +103,7 @@ async function submit() {
 
                 <div>
                     <Label for="reason">Alasan Keberatan</Label>
-                    <Textarea id="reason" v-model="form.reason" class="mt-1" required />
+                    <Textarea id="reason" v-model="form.reason" class="mt-1" rows="4" required />
                     <p v-if="errors.reason" class="mt-1 text-sm text-destructive">{{ errors.reason[0] }}</p>
                 </div>
 
@@ -110,15 +112,32 @@ async function submit() {
                     <input
                         id="evidence"
                         type="file"
-                        class="mt-1 block w-full text-sm"
+                        class="mt-1 block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70"
                         @change="evidenceFile = $event.target.files[0]"
                     >
+                    <p v-if="errors.evidence" class="mt-1 text-sm text-destructive">{{ errors.evidence[0] }}</p>
                 </div>
 
                 <Button type="submit" :disabled="submitting" class="w-full">
                     {{ submitting ? 'Mengirim...' : 'Kirim Keberatan' }}
                 </Button>
             </form>
+
+            <RouterLink
+                v-if="auth.user?.email_verified_at && !success"
+                v-reveal="100"
+                to="/permohonan/lacak"
+                class="group mt-6 flex items-center gap-4 rounded-2xl border border-dashed border-border p-5 transition-colors hover:border-primary/40 hover:bg-primary/5"
+            >
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <FileSearch class="h-5 w-5" />
+                </span>
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-foreground">Lupa nomor permohonan?</p>
+                    <p class="mt-0.5 text-sm text-muted-foreground">Lacak permohonan Anda untuk melihat kembali nomor permohonannya.</p>
+                </div>
+                <ArrowRight class="h-4 w-4 shrink-0 text-primary transition-transform group-hover:translate-x-1" />
+            </RouterLink>
         </div>
     </PublicLayout>
 </template>
