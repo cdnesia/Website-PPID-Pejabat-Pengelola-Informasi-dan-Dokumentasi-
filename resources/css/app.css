@@ -122,6 +122,15 @@
     ::selection {
         @apply bg-primary/20;
     }
+
+    a[href],
+    button:not(:disabled),
+    [role='button']:not([aria-disabled='true']),
+    label[for],
+    select,
+    summary {
+        cursor: pointer;
+    }
 }
 
 @layer components {

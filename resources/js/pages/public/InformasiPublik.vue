@@ -7,6 +7,7 @@ import PageHeader from '@/components/shared/PageHeader.vue';
 import EmptyState from '@/components/shared/EmptyState.vue';
 import Pagination from '@/components/shared/Pagination.vue';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { getInformationType, informationTypes } from '@/lib/informationTypes';
 import { ArrowRight, Calendar, FileText, Paperclip, Search } from '@lucide/vue';
 
@@ -67,14 +68,18 @@ function formatDate(date) {
             subtitle="Informasi berkala, serta-merta, setiap saat, dan dikecualikan sesuai UU Keterbukaan Informasi Publik."
         />
         <div class="mx-auto max-w-6xl px-4 py-10">
-            <div class="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-3">
-                <nav class="flex flex-wrap gap-x-6 gap-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
+                <nav class="flex flex-wrap gap-2">
                     <button
                         v-for="tab in tabs"
                         :key="tab.value"
                         type="button"
-                        class="-mb-3 border-b-2 pb-3 text-sm font-medium transition-colors"
-                        :class="activeType === tab.value ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'"
+                        class="rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+                        :class="
+                            activeType === tab.value
+                                ? 'bg-primary text-primary-foreground shadow-sm'
+                                : 'bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground'
+                        "
                         @click="selectTab(tab.value)"
                     >
                         {{ tab.label }}
@@ -100,26 +105,19 @@ function formatDate(date) {
                     :key="item.id"
                     v-reveal="(index % 3) * 100"
                     :to="`/informasi-publik/${item.slug}`"
-                    class="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    class="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg"
                 >
-                    <span class="absolute inset-y-0 left-0 w-[3px]" :class="typeStyle(item.category?.type).bar" />
-                    <component
-                        :is="typeStyle(item.category?.type).icon"
-                        class="pointer-events-none absolute -top-3 -right-3 h-24 w-24 opacity-[0.06] transition-transform duration-300 group-hover:scale-110 group-hover:opacity-[0.1]"
-                        :class="typeStyle(item.category?.type).watermark"
-                    />
-
-                    <div class="relative flex items-center gap-1.5 text-[11px] font-semibold tracking-wide uppercase" :class="typeStyle(item.category?.type).text">
-                        <component :is="typeStyle(item.category?.type).icon" class="h-3.5 w-3.5" />
+                    <Badge :variant="typeStyle(item.category?.type).variant" class="w-fit gap-1.5">
+                        <component :is="typeStyle(item.category?.type).icon" class="h-3 w-3" />
                         {{ typeLabel(item.category?.type) }}
-                    </div>
+                    </Badge>
 
-                    <h3 class="relative mt-3 text-base leading-snug font-semibold text-foreground transition-colors group-hover:text-primary">
+                    <h3 class="mt-3 text-base leading-snug font-semibold text-foreground transition-colors group-hover:text-primary">
                         {{ item.title }}
                     </h3>
-                    <p class="relative mt-1.5 line-clamp-2 text-sm text-muted-foreground">{{ item.description }}</p>
+                    <p class="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{{ item.description }}</p>
 
-                    <div class="relative mt-auto flex items-center justify-between gap-2 border-t border-border/70 pt-3.5 text-xs text-muted-foreground">
+                    <div class="mt-auto flex items-center justify-between gap-2 border-t border-border/70 pt-3.5 text-xs text-muted-foreground">
                         <div class="flex items-center gap-3">
                             <span class="flex items-center gap-1.5">
                                 <Calendar class="h-3.5 w-3.5" />

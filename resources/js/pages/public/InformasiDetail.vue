@@ -6,6 +6,7 @@ import PublicLayout from '@/layouts/PublicLayout.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import ShareButtons from '@/components/shared/ShareButtons.vue';
+import { getInformationType } from '@/lib/informationTypes';
 import { Building2, Calendar, Download, FileText, Info, LayoutGrid, Search } from '@lucide/vue';
 
 const route = useRoute();
@@ -48,6 +49,8 @@ const quickLinks = [
 const publishedDate = computed(() =>
     information.value ? new Date(information.value.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '',
 );
+
+const categoryBadgeVariant = computed(() => getInformationType(information.value?.category?.type).variant);
 </script>
 
 <template>
@@ -75,7 +78,7 @@ const publishedDate = computed(() =>
                         class="hero-fade-up mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground"
                         style="animation-delay: 160ms"
                     >
-                        <Badge variant="secondary">{{ information.category?.name }}</Badge>
+                        <Badge :variant="categoryBadgeVariant">{{ information.category?.name }}</Badge>
                         <span class="flex items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 py-1">
                             <Calendar class="h-3.5 w-3.5" />
                             {{ publishedDate }}
