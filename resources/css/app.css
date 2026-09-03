@@ -1,0 +1,214 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+    --radius: 0.75rem;
+
+    --background: oklch(98% 0.003 247);
+    --foreground: oklch(24% 0.01 258);
+
+    --card: oklch(100% 0 0);
+    --card-foreground: oklch(24% 0.01 258);
+
+    --popover: oklch(100% 0 0);
+    --popover-foreground: oklch(24% 0.01 258);
+
+    /* UM Jambi — Merah Maroon */
+    --primary: #7a1f2d;
+    --primary-foreground: #ffffff;
+
+    /* UM Jambi — Kuning Emas */
+    --secondary: #c9a227;
+    --secondary-foreground: #3a2609;
+
+    --muted: oklch(95% 0.005 258);
+    --muted-foreground: oklch(48% 0.015 258);
+
+    /* Aksen sukses (semantik, terpisah dari warna identitas) */
+    --accent: #1e7245;
+    --accent-foreground: #ffffff;
+
+    /* Aksen bahaya/peringatan (semantik, terpisah dari warna identitas) */
+    --destructive: #b3261e;
+    --destructive-foreground: #ffffff;
+
+    --border: oklch(90% 0.005 258);
+    --input: oklch(90% 0.005 258);
+    --ring: #7a1f2d80;
+}
+
+.dark {
+    --background: oklch(20% 0.01 258);
+    --foreground: oklch(95% 0.005 258);
+
+    --card: oklch(24% 0.01 258);
+    --card-foreground: oklch(95% 0.005 258);
+
+    --popover: oklch(24% 0.01 258);
+    --popover-foreground: oklch(95% 0.005 258);
+
+    --primary: #be5567;
+    --primary-foreground: #2a0e14;
+
+    --secondary: #e0b84a;
+    --secondary-foreground: #3a2609;
+
+    --muted: oklch(30% 0.01 258);
+    --muted-foreground: oklch(70% 0.01 258);
+
+    --accent: #4caf7d;
+    --accent-foreground: #0f2f1e;
+
+    --destructive: #e0655f;
+    --destructive-foreground: #3a0d0a;
+
+    --border: oklch(35% 0.01 258);
+    --input: oklch(35% 0.01 258);
+    --ring: #be556780;
+}
+
+@theme inline {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+
+    ::selection {
+        @apply bg-primary/20;
+    }
+}
+
+@layer components {
+    .prose-content :where(h2, h3) {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+    .prose-content h2 {
+        font-size: 1.25em;
+        margin: 0.75em 0 0.35em;
+    }
+    .prose-content h3 {
+        font-size: 1.1em;
+        margin: 0.75em 0 0.35em;
+    }
+    .prose-content p {
+        margin: 0.5em 0;
+    }
+    .prose-content ul,
+    .prose-content ol {
+        margin: 0.5em 0;
+        padding-left: 1.5em;
+    }
+    .prose-content ul {
+        list-style: disc;
+    }
+    .prose-content ol {
+        list-style: decimal;
+    }
+    .prose-content blockquote {
+        margin: 0.75em 0;
+        padding-left: 1em;
+        border-left: 3px solid var(--border);
+        color: var(--muted-foreground);
+    }
+    .prose-content a {
+        color: var(--primary);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+    .prose-content img {
+        max-width: 100%;
+        border-radius: var(--radius-md);
+        margin: 0.75em 0;
+    }
+    .prose-content p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        color: var(--muted-foreground);
+        float: left;
+        height: 0;
+        pointer-events: none;
+    }
+
+    .reveal-init {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+            opacity 0.6s ease,
+            transform 0.6s ease;
+    }
+    .reveal-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .hero-fade-up {
+        animation: hero-fade-up 0.7s ease both;
+    }
+}
+
+@keyframes hero-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-init,
+    .hero-fade-up {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
