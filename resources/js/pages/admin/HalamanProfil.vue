@@ -31,12 +31,17 @@ const image = ref(null);
 const imagePreview = ref(null);
 const currentImage = ref(null);
 
+const imageSlugs = ['struktur-organisasi', 'alur-layanan'];
+
 const kind = computed(() => {
     if (!activeSlug.value) return null;
     if (activeSlug.value === 'tentang-ppid') return 'body';
     if (activeSlug.value === 'visi-misi') return 'visi-misi';
+    if (activeSlug.value === 'alur-layanan') return 'image';
     return 'items';
 });
+
+const imageLabel = computed(() => (activeSlug.value === 'alur-layanan' ? 'Gambar Alur Layanan' : 'Bagan Struktur Organisasi (opsional)'));
 
 async function loadList() {
     loadingList.value = true;
@@ -108,6 +113,10 @@ function onImageChange(event) {
 }
 
 function appendContent(payload) {
+    if (kind.value === 'image') {
+        return;
+    }
+
     if (kind.value === 'body') {
         payload.append('content[body]', body.value);
         return;
@@ -204,7 +213,7 @@ onMounted(loadList);
 <template>
     <AdminLayout>
         <h1 class="text-xl font-bold">Halaman Profil</h1>
-        <p class="mt-1 text-sm text-muted-foreground">Kelola konten halaman Tentang PPID, Visi Misi, Struktur Organisasi, Tugas Fungsi, dan Dasar Hukum.</p>
+        <p class="mt-1 text-sm text-muted-foreground">Kelola konten halaman Tentang PPID, Visi Misi, Struktur Organisasi, Tugas Fungsi, Alur Layanan, dan Dasar Hukum.</p>
 
         <p v-if="loadingList" class="mt-6 text-sm text-muted-foreground">Memuat...</p>
 
@@ -243,8 +252,8 @@ onMounted(loadList);
                             <p v-if="errors.subtitle" class="mt-1 text-sm text-destructive">{{ errors.subtitle[0] }}</p>
                         </div>
 
-                        <div v-if="activeSlug === 'struktur-organisasi'">
-                            <Label for="image">Bagan Struktur Organisasi (opsional)</Label>
+                        <div v-if="imageSlugs.includes(activeSlug)">
+                            <Label for="image">{{ imageLabel }}</Label>
                             <div class="mt-1 flex items-center gap-3">
                                 <div class="flex h-20 w-32 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-muted">
                                     <img

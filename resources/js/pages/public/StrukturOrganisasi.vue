@@ -25,6 +25,7 @@ onMounted(async () => {
             <template v-else-if="page">
                 <img
                     v-if="page.image_url"
+                    v-reveal
                     :src="page.image_url"
                     :alt="page.title"
                     class="w-full rounded-2xl border border-border object-contain shadow-sm"
@@ -34,7 +35,12 @@ onMounted(async () => {
                     class="flex flex-col divide-y divide-border rounded-2xl border border-border bg-card shadow-sm"
                     :class="page.image_url ? 'mt-8' : ''"
                 >
-                    <div v-for="(item, index) in page.content.items" :key="item.title" class="flex items-start gap-4 p-5">
+                    <div
+                        v-for="(item, index) in page.content.items"
+                        :key="item.title"
+                        v-reveal="index * 70"
+                        class="flex items-start gap-4 p-5"
+                    >
                         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
                             {{ index + 1 }}
                         </span>

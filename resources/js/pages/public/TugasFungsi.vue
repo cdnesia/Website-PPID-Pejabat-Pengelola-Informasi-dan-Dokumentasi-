@@ -24,7 +24,12 @@ onMounted(async () => {
         <div class="mx-auto max-w-4xl px-4 py-12">
             <p v-if="loading" class="text-sm text-muted-foreground">Memuat...</p>
             <div v-else-if="page" class="grid gap-4 sm:grid-cols-2">
-                <div v-for="item in page.content.items" :key="item.title" class="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                <div
+                    v-for="(item, index) in page.content.items"
+                    :key="item.title"
+                    v-reveal="(index % 2) * 100"
+                    class="rounded-2xl border border-border bg-card p-5 shadow-sm"
+                >
                     <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                         <ScrollText class="h-5 w-5" />
                     </span>

@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import api from '@/lib/axios';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import PageHeader from '@/components/shared/PageHeader.vue';
@@ -9,7 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, FileSearch, MessageSquare, Search } from '@lucide/vue';
+import { ArrowRight, Calendar, FileSearch, FileText, MessageSquare, Search } from '@lucide/vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -37,6 +37,10 @@ const statusVariants = {
     answered: 'accent',
     rejected: 'destructive',
 };
+
+function formatDate(value) {
+    return new Date(value).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+}
 
 const formatLabels = { digital: 'Digital', cetak: 'Cetak' };
 const deliveryLabels = { email: 'Email', datang_langsung: 'Datang Langsung', pos: 'Pos', whatsapp: 'WhatsApp' };
@@ -76,16 +80,23 @@ onMounted(() => {
         <PageHeader title="Lacak Permohonan" subtitle="Masukkan nomor permohonan Anda untuk memeriksa status terkini." />
 
         <div class="mx-auto max-w-2xl px-4 py-12">
-            <form class="flex gap-2" @submit.prevent="track">
-                <Input v-model="requestNumber" placeholder="PPID-2026-0001" class="flex-1" />
-                <Button type="submit" :disabled="loading">
-                    <Search class="h-4 w-4" />
-                    {{ loading ? 'Mencari...' : 'Lacak' }}
-                </Button>
-            </form>
-            <p v-if="emptyInputError" class="mt-1.5 text-sm text-destructive">
-                Masukkan nomor permohonan terlebih dahulu, contoh: PPID-2026-0001.
-            </p>
+            <div v-reveal class="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <form class="flex gap-2" @submit.prevent="track">
+                    <div class="relative flex-1">
+                        <Search class="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input v-model="requestNumber" placeholder="PPID-2026-0001" class="pl-10" />
+                    </div>
+                    <Button type="submit" :disabled="loading">
+                        {{ loading ? 'Mencari...' : 'Lacak' }}
+                    </Button>
+                </form>
+                <p v-if="emptyInputError" class="mt-2 text-sm text-destructive">
+                    Masukkan nomor permohonan terlebih dahulu, contoh: PPID-2026-0001.
+                </p>
+                <p v-else class="mt-2 text-xs text-muted-foreground">
+                    Nomor permohonan dikirim melalui email saat Anda mengajukan permohonan informasi.
+                </p>
+            </div>
 
             <EmptyState
                 v-if="notFound"
@@ -94,7 +105,23 @@ onMounted(() => {
                 class="mt-6"
             />
 
-            <Card v-if="result" class="mt-6">
+            <RouterLink
+                v-if="!result"
+                v-reveal="100"
+                to="/permohonan/buat"
+                class="group mt-6 flex items-center gap-4 rounded-2xl border border-dashed border-border p-5 transition-colors hover:border-primary/40 hover:bg-primary/5"
+            >
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <FileText class="h-5 w-5" />
+                </span>
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-foreground">Belum memiliki nomor permohonan?</p>
+                    <p class="mt-0.5 text-sm text-muted-foreground">Ajukan permohonan informasi publik terlebih dahulu, nomornya akan diberikan setelahnya.</p>
+                </div>
+                <ArrowRight class="h-4 w-4 shrink-0 text-primary transition-transform group-hover:translate-x-1" />
+            </RouterLink>
+
+            <Card v-if="result" v-reveal class="mt-6">
                 <CardHeader>
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <CardTitle class="font-mono text-base">{{ result.request_number }}</CardTitle>
@@ -102,7 +129,7 @@ onMounted(() => {
                     </div>
                     <CardDescription class="flex items-center gap-1.5">
                         <Calendar class="h-3.5 w-3.5" />
-                        Diajukan {{ new Date(result.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+                        Diajukan {{ formatDate(result.created_at) }}
                     </CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-4">
@@ -138,7 +165,7 @@ onMounted(() => {
                         </div>
                         <div v-if="result.due_date">
                             <dt class="text-muted-foreground">Batas Waktu Jawaban</dt>
-                            <dd class="mt-0.5 font-medium text-foreground">{{ new Date(result.due_date).toLocaleDateString('id-ID') }}</dd>
+                            <dd class="mt-0.5 font-medium text-foreground">{{ formatDate(result.due_date) }}</dd>
                         </div>
                     </dl>
 

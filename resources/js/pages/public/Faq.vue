@@ -1,5 +1,6 @@
 <script setup>
 import PublicLayout from '@/layouts/PublicLayout.vue';
+import PageHeader from '@/components/shared/PageHeader.vue';
 
 const faqs = [
     {
@@ -23,11 +24,16 @@ const faqs = [
 
 <template>
     <PublicLayout>
-        <div class="mx-auto max-w-3xl px-4 py-10">
-            <h1 class="text-2xl font-bold">Pertanyaan yang Sering Diajukan</h1>
-            <div class="mt-6 space-y-4">
-                <div v-for="item in faqs" :key="item.q" class="rounded-lg border border-border p-4">
-                    <p class="font-medium">{{ item.q }}</p>
+        <PageHeader title="Pertanyaan yang Sering Diajukan" subtitle="Jawaban atas pertanyaan umum seputar layanan informasi publik." />
+        <div class="mx-auto max-w-3xl px-4 py-12">
+            <div class="space-y-4">
+                <div
+                    v-for="(item, index) in faqs"
+                    :key="item.q"
+                    v-reveal="index * 100"
+                    class="rounded-lg border border-border bg-card p-4 shadow-sm"
+                >
+                    <p class="font-medium text-foreground">{{ item.q }}</p>
                     <p class="mt-1 text-sm text-muted-foreground">{{ item.a }}</p>
                 </div>
             </div>

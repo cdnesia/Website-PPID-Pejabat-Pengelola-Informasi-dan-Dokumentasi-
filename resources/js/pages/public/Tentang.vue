@@ -22,7 +22,7 @@ onMounted(async () => {
         <PageHeader v-if="page" :title="page.title" :subtitle="page.subtitle" />
         <div class="mx-auto max-w-3xl px-4 py-12">
             <p v-if="loading" class="text-sm text-muted-foreground">Memuat...</p>
-            <p v-else-if="page" class="text-base leading-relaxed text-foreground">{{ page.content.body }}</p>
+            <p v-else-if="page" v-reveal class="text-base leading-relaxed text-foreground">{{ page.content.body }}</p>
         </div>
     </PublicLayout>
 </template>

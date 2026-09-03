@@ -49,13 +49,24 @@ const quickLinks = [
                 <div v-if="loading" class="text-sm text-muted-foreground">Memuat berita...</div>
                 <div v-else-if="!news" class="text-sm text-muted-foreground">Berita tidak ditemukan.</div>
                 <div v-else>
-                    <span class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-primary uppercase">
+                    <span
+                        class="hero-fade-up inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-primary uppercase"
+                        style="animation-delay: 0ms"
+                    >
                         <Newspaper class="h-3.5 w-3.5" />
                         Berita &amp; Pengumuman
                     </span>
-                    <h1 class="mt-4 text-2xl leading-tight font-bold tracking-tight text-foreground sm:text-4xl">{{ news.title }}</h1>
+                    <h1
+                        class="hero-fade-up mt-4 text-2xl leading-tight font-bold tracking-tight text-foreground sm:text-4xl"
+                        style="animation-delay: 80ms"
+                    >
+                        {{ news.title }}
+                    </h1>
 
-                    <div class="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
+                    <div
+                        class="hero-fade-up mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground"
+                        style="animation-delay: 160ms"
+                    >
                         <Badge v-if="news.category" variant="secondary">{{ news.category }}</Badge>
                         <span class="flex items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 py-1">
                             <Calendar class="h-3.5 w-3.5" />
@@ -76,7 +87,7 @@ const quickLinks = [
 
         <div v-if="news" class="mx-auto max-w-6xl px-4 py-12">
             <div class="grid gap-8 lg:grid-cols-3 lg:gap-12">
-                <article class="min-w-0 lg:col-span-2">
+                <article v-reveal class="min-w-0 lg:col-span-2">
                     <img
                         v-if="news.thumbnail"
                         :src="news.thumbnail"
@@ -96,7 +107,7 @@ const quickLinks = [
                 </article>
 
                 <aside class="flex flex-col gap-6 lg:col-span-1">
-                    <div class="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                    <div v-reveal="120" class="rounded-2xl border border-border bg-card p-5 shadow-sm">
                         <h2 class="flex items-center gap-2 text-sm font-semibold text-foreground">
                             <Newspaper class="h-4 w-4 text-primary" />
                             Berita Lainnya
@@ -130,7 +141,7 @@ const quickLinks = [
                         <p v-else class="mt-4 text-sm text-muted-foreground">Belum ada berita lain.</p>
                     </div>
 
-                    <div class="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                    <div v-reveal="200" class="rounded-2xl border border-border bg-card p-5 shadow-sm">
                         <h2 class="text-sm font-semibold text-foreground">Layanan Cepat</h2>
                         <div class="mt-4 flex flex-col gap-2">
                             <RouterLink v-for="link in quickLinks" :key="link.to" :to="link.to">

@@ -25,7 +25,7 @@ class UpdatePageRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'subtitle' => ['nullable', 'string', 'max:500'],
-            'content' => ['required', 'array'],
+            'content' => ['nullable', 'array'],
             'content.body' => ['nullable', 'string'],
             'content.visi' => ['nullable', 'string'],
             'content.misi' => ['nullable', 'array'],

@@ -87,6 +87,12 @@ class PageSeeder extends Seeder
                 ],
             ],
             [
+                'slug' => 'alur-layanan',
+                'title' => 'Alur Layanan',
+                'subtitle' => 'Tahapan proses permohonan informasi publik dari awal hingga jawaban diterima.',
+                'content' => [],
+            ],
+            [
                 'slug' => 'dasar-hukum',
                 'title' => 'Dasar Hukum',
                 'subtitle' => 'Landasan peraturan perundang-undangan yang mengatur keterbukaan informasi publik.',

@@ -80,7 +80,7 @@ const mobileGroups = [
 
             <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5">
                 <RouterLink to="/" class="flex items-center" @click="mobileOpen = false">
-                    <img :src="logoUrl" alt="PPID Universitas Muhammadiyah Jambi" class="h-10 w-auto sm:h-11">
+                    <img :src="logoUrl" alt="PPID Universitas Muhammadiyah Jambi" class="h-12 w-auto sm:h-14">
                 </RouterLink>
 
                 <nav class="hidden flex-1 items-stretch gap-1 self-stretch lg:flex">

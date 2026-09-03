@@ -24,7 +24,7 @@ onMounted(async () => {
         <div class="mx-auto max-w-3xl px-4 py-12">
             <p v-if="loading" class="text-sm text-muted-foreground">Memuat...</p>
             <template v-else-if="page">
-                <div class="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <div v-reveal class="rounded-2xl border border-border bg-card p-6 shadow-sm">
                     <p class="text-sm font-semibold text-foreground">Visi</p>
                     <p class="mt-2 text-base leading-relaxed text-muted-foreground">{{ page.content.visi }}</p>
                 </div>
@@ -33,8 +33,9 @@ onMounted(async () => {
                     <p class="text-sm font-semibold text-foreground">Misi</p>
                     <ul class="mt-3 flex flex-col gap-3">
                         <li
-                            v-for="item in page.content.misi"
+                            v-for="(item, index) in page.content.misi"
                             :key="item"
+                            v-reveal="index * 80"
                             class="flex items-start gap-3 rounded-xl border border-border bg-card p-4 shadow-sm"
                         >
                             <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">

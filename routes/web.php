@@ -14,7 +14,7 @@ Route::get('/{any}', function (Request $request, string $any = '') {
 
     $meta = [
         'title' => $siteName,
-        'description' => "Pejabat Pengelola Informasi dan Dokumentasi (PPID) {$siteName} — layanan permohonan, keberatan, dan keterbukaan informasi publik sesuai UU No. 14 Tahun 2008.",
+        'description' => 'Pejabat Pengelola Informasi dan Dokumentasi (PPID) Universitas Muhammadiyah Jambi — layanan permohonan, keberatan, dan keterbukaan informasi publik sesuai UU No. 14 Tahun 2008.',
         'image' => $defaultImage,
         'url' => $request->url(),
     ];

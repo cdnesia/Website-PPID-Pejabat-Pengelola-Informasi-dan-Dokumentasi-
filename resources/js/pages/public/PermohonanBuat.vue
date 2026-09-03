@@ -117,7 +117,7 @@ function handleSubmitError(error) {
         />
 
         <div class="mx-auto max-w-3xl px-4 py-12">
-            <Card v-if="submitted" class="border-accent">
+            <Card v-if="submitted" v-reveal class="border-accent">
                 <CardHeader>
                     <CardTitle>Permohonan Berhasil Diajukan</CardTitle>
                     <CardDescription>Simpan nomor permohonan Anda untuk melacak status.</CardDescription>
@@ -131,7 +131,7 @@ function handleSubmitError(error) {
             </Card>
 
             <form v-else class="space-y-8" @submit.prevent="submit">
-                <section class="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <section v-reveal class="rounded-2xl border border-border bg-card p-6 shadow-sm">
                     <h2 class="text-base font-semibold text-foreground">Data Pemohon</h2>
                     <div class="mt-4 grid gap-4 sm:grid-cols-2">
                         <div class="sm:col-span-2">
@@ -177,7 +177,7 @@ function handleSubmitError(error) {
                     </div>
                 </section>
 
-                <section class="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <section v-reveal="80" class="rounded-2xl border border-border bg-card p-6 shadow-sm">
                     <h2 class="text-base font-semibold text-foreground">Rincian Permohonan</h2>
                     <div class="mt-4 space-y-4">
                         <div>

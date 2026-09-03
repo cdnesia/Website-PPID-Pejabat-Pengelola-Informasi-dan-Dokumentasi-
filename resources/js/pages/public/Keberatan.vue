@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue';
 import api from '@/lib/axios';
 import { useAuthStore } from '@/stores/auth';
 import PublicLayout from '@/layouts/PublicLayout.vue';
+import PageHeader from '@/components/shared/PageHeader.vue';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -64,14 +65,12 @@ async function submit() {
 
 <template>
     <PublicLayout>
-        <div class="mx-auto max-w-xl px-4 py-10">
-            <h1 class="text-2xl font-bold">Ajukan Keberatan</h1>
-            <p class="mt-1 text-sm text-muted-foreground">
-                Ajukan keberatan jika permohonan Anda ditolak tanpa alasan jelas, tidak dijawab dalam batas waktu,
-                atau biaya yang dikenakan tidak wajar.
-            </p>
-
-            <Card v-if="!auth.user?.email_verified_at" class="mt-6 border-secondary">
+        <PageHeader
+            title="Ajukan Keberatan"
+            subtitle="Ajukan keberatan jika permohonan Anda ditolak tanpa alasan jelas, tidak dijawab dalam batas waktu, atau biaya yang dikenakan tidak wajar."
+        />
+        <div class="mx-auto max-w-xl px-4 py-12">
+            <Card v-if="!auth.user?.email_verified_at" v-reveal class="border-secondary">
                 <CardHeader>
                     <CardTitle>Verifikasi Email Diperlukan</CardTitle>
                     <CardDescription>
@@ -86,14 +85,14 @@ async function submit() {
                 </CardContent>
             </Card>
 
-            <Card v-else-if="success" class="mt-6 border-accent">
+            <Card v-else-if="success" v-reveal class="border-accent">
                 <CardHeader>
                     <CardTitle>Keberatan Terkirim</CardTitle>
                     <CardDescription>Tim PPID akan meninjau keberatan Anda.</CardDescription>
                 </CardHeader>
             </Card>
 
-            <form v-else class="mt-6 space-y-5" @submit.prevent="submit">
+            <form v-else v-reveal class="space-y-5" @submit.prevent="submit">
                 <div>
                     <Label for="request_number">Nomor Permohonan</Label>
                     <Input id="request_number" v-model="form.request_number" placeholder="PPID-2026-0001" class="mt-1" required />
