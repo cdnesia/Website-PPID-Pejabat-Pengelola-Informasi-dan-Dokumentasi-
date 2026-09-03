@@ -1,6 +1,14 @@
 <script setup>
+import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
-import logoUrl from '@/assets/logo-ppid-umjambi.png';
+import { useSettingsStore } from '@/stores/settings';
+import defaultLogoUrl from '@/assets/logo-ppid-umjambi.png';
+
+const settingsStore = useSettingsStore();
+
+onMounted(() => settingsStore.fetchSettings());
+
+const logoUrl = computed(() => settingsStore.settings?.logo_url || defaultLogoUrl);
 </script>
 
 <template>

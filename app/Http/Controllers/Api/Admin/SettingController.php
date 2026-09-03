@@ -17,7 +17,11 @@ class SettingController extends Controller
     public function update(UpdateSettingRequest $request): SettingResource
     {
         $setting = Setting::current();
-        $setting->update($request->validated());
+        $setting->update($request->safe()->except('logo'));
+
+        if ($request->hasFile('logo')) {
+            $setting->addMediaFromRequest('logo')->toMediaCollection('logo');
+        }
 
         return new SettingResource($setting);
     }

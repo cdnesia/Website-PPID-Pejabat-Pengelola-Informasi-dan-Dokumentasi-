@@ -22,6 +22,7 @@ class SettingResource extends JsonResource
             'response_deadline_days' => $this->response_deadline_days,
             'banner_text' => $this->banner_text,
             'banner_is_active' => $this->banner_is_active,
+            'logo_url' => $this->getFirstMediaUrl('logo') ?: null,
         ];
     }
 }

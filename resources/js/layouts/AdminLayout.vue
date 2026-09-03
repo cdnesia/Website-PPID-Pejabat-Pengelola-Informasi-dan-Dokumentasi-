@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useSettingsStore } from '@/stores/settings';
 import { Button } from '@/components/ui/button';
-import logoUrl from '@/assets/logo-ppid-umjambi.png';
+import defaultLogoUrl from '@/assets/logo-ppid-umjambi.png';
 import {
     LayoutDashboard,
     ClipboardList,
@@ -22,8 +23,13 @@ import {
 } from '@lucide/vue';
 
 const auth = useAuthStore();
+const settingsStore = useSettingsStore();
 const mobileOpen = ref(false);
 const sidebarOpen = ref(true);
+
+onMounted(() => settingsStore.fetchSettings());
+
+const logoUrl = computed(() => settingsStore.settings?.logo_url || defaultLogoUrl);
 
 const navItems = [
     { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },

@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { ImageOff } from '@lucide/vue';
+import { toast } from '@/lib/toast';
 
 const settingsForm = reactive({
     org_name: '',
@@ -18,8 +20,10 @@ const settingsForm = reactive({
     banner_is_active: false,
 });
 const settingsSubmitting = ref(false);
-const settingsSaved = ref(false);
 const settingsErrors = ref({});
+const logo = ref(null);
+const logoPreview = ref(null);
+const currentLogo = ref(null);
 
 const workUnits = ref([]);
 const workUnitForm = reactive({ id: null, code: '', name: '', head_name: '', head_title: '', is_active: true });
@@ -32,6 +36,13 @@ const categoryErrors = ref({});
 async function loadSettings() {
     const { data } = await api.get('/admin/settings');
     Object.assign(settingsForm, data.data);
+    currentLogo.value = data.data.logo_url ?? null;
+}
+
+function onLogoChange(event) {
+    const file = event.target.files[0] ?? null;
+    logo.value = file;
+    logoPreview.value = file ? URL.createObjectURL(file) : null;
 }
 
 async function loadWorkUnits() {
@@ -52,19 +63,70 @@ onMounted(() => {
 
 async function saveSettings() {
     settingsSubmitting.value = true;
-    settingsSaved.value = false;
     settingsErrors.value = {};
 
+    const payload = new FormData();
+    payload.append('org_name', settingsForm.org_name);
+    payload.append('org_email', settingsForm.org_email ?? '');
+    payload.append('org_phone', settingsForm.org_phone ?? '');
+    payload.append('org_address', settingsForm.org_address ?? '');
+    payload.append('response_deadline_days', settingsForm.response_deadline_days);
+    payload.append('banner_text', settingsForm.banner_text ?? '');
+    payload.append('banner_is_active', settingsForm.banner_is_active ? '1' : '0');
+    if (logo.value) payload.append('logo', logo.value);
+    payload.append('_method', 'PUT');
+
     try {
-        await api.put('/admin/settings', settingsForm);
-        settingsSaved.value = true;
+        const { data } = await api.post('/admin/settings', payload, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        logo.value = null;
+        logoPreview.value = null;
+        currentLogo.value = data.data.logo_url ?? null;
+        toast({ title: 'Pengaturan tersimpan', description: 'Perubahan berhasil disimpan.', variant: 'success' });
     } catch (error) {
-        if (error.response?.status === 422) {
-            settingsErrors.value = error.response.data.errors;
-        }
+        handleSubmitError(error, settingsErrors, 'Gagal menyimpan pengaturan');
     } finally {
         settingsSubmitting.value = false;
     }
+}
+
+function handleSubmitError(error, errorsRef, fallbackTitle) {
+    if (error.response?.status === 422) {
+        errorsRef.value = error.response.data.errors ?? {};
+        const messages = Object.values(errorsRef.value).flat();
+        toast({
+            title: 'Data belum lengkap atau tidak valid',
+            description: messages[0] ?? 'Periksa kembali isian formulir.',
+            variant: 'destructive',
+        });
+        return;
+    }
+
+    if (!error.response) {
+        toast({
+            title: 'Tidak dapat terhubung ke server',
+            description: 'Periksa koneksi internet Anda, lalu coba simpan kembali.',
+            variant: 'destructive',
+        });
+        return;
+    }
+
+    if (error.response.status === 401 || error.response.status === 419) {
+        toast({ title: 'Sesi Anda telah berakhir', description: 'Silakan masuk kembali untuk melanjutkan.', variant: 'destructive' });
+        return;
+    }
+
+    if (error.response.status === 403) {
+        toast({ title: 'Akses ditolak', description: 'Anda tidak memiliki izin untuk melakukan aksi ini.', variant: 'destructive' });
+        return;
+    }
+
+    toast({
+        title: fallbackTitle,
+        description: error.response.data?.message ?? `Terjadi kesalahan pada server (${error.response.status}). Coba lagi beberapa saat.`,
+        variant: 'destructive',
+    });
 }
 
 function editWorkUnit(unit) {
@@ -78,25 +140,38 @@ function resetWorkUnitForm() {
 
 async function saveWorkUnit() {
     workUnitErrors.value = {};
+    const isEditing = !!workUnitForm.id;
     try {
-        if (workUnitForm.id) {
+        if (isEditing) {
             await api.put(`/admin/work-units/${workUnitForm.id}`, workUnitForm);
         } else {
             await api.post('/admin/work-units', workUnitForm);
         }
+        toast({
+            title: 'Unit kerja tersimpan',
+            description: `"${workUnitForm.name}" berhasil ${isEditing ? 'diperbarui' : 'ditambahkan'}.`,
+            variant: 'success',
+        });
         resetWorkUnitForm();
         await loadWorkUnits();
     } catch (error) {
-        if (error.response?.status === 422) {
-            workUnitErrors.value = error.response.data.errors;
-        }
+        handleSubmitError(error, workUnitErrors, 'Gagal menyimpan unit kerja');
     }
 }
 
 async function removeWorkUnit(unit) {
     if (!confirm(`Hapus unit kerja "${unit.name}"?`)) return;
-    await api.delete(`/admin/work-units/${unit.id}`);
-    await loadWorkUnits();
+    try {
+        await api.delete(`/admin/work-units/${unit.id}`);
+        toast({ title: 'Unit kerja dihapus', description: `"${unit.name}" berhasil dihapus.`, variant: 'success' });
+        await loadWorkUnits();
+    } catch (error) {
+        toast({
+            title: 'Gagal menghapus unit kerja',
+            description: error.response?.data?.message ?? 'Terjadi kesalahan pada server. Coba lagi beberapa saat.',
+            variant: 'destructive',
+        });
+    }
 }
 
 function editCategory(category) {
@@ -110,25 +185,38 @@ function resetCategoryForm() {
 
 async function saveCategory() {
     categoryErrors.value = {};
+    const isEditing = !!categoryForm.id;
     try {
-        if (categoryForm.id) {
+        if (isEditing) {
             await api.put(`/admin/categories/${categoryForm.id}`, categoryForm);
         } else {
             await api.post('/admin/categories', categoryForm);
         }
+        toast({
+            title: 'Kategori tersimpan',
+            description: `"${categoryForm.name}" berhasil ${isEditing ? 'diperbarui' : 'ditambahkan'}.`,
+            variant: 'success',
+        });
         resetCategoryForm();
         await loadCategories();
     } catch (error) {
-        if (error.response?.status === 422) {
-            categoryErrors.value = error.response.data.errors;
-        }
+        handleSubmitError(error, categoryErrors, 'Gagal menyimpan kategori');
     }
 }
 
 async function removeCategory(category) {
     if (!confirm(`Hapus kategori "${category.name}"?`)) return;
-    await api.delete(`/admin/categories/${category.id}`);
-    await loadCategories();
+    try {
+        await api.delete(`/admin/categories/${category.id}`);
+        toast({ title: 'Kategori dihapus', description: `"${category.name}" berhasil dihapus.`, variant: 'success' });
+        await loadCategories();
+    } catch (error) {
+        toast({
+            title: 'Gagal menghapus kategori',
+            description: error.response?.data?.message ?? 'Terjadi kesalahan pada server. Coba lagi beberapa saat.',
+            variant: 'destructive',
+        });
+    }
 }
 </script>
 
@@ -143,6 +231,28 @@ async function removeCategory(category) {
             </CardHeader>
             <CardContent>
                 <form class="space-y-4" @submit.prevent="saveSettings">
+                    <div>
+                        <Label for="logo">Logo</Label>
+                        <div class="mt-1 flex items-center gap-3">
+                            <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-muted">
+                                <img
+                                    v-if="logoPreview || currentLogo"
+                                    :src="logoPreview || currentLogo"
+                                    alt="Pratinjau logo"
+                                    class="h-full w-full object-contain"
+                                >
+                                <ImageOff v-else class="h-5 w-5 text-muted-foreground" />
+                            </div>
+                            <input
+                                id="logo"
+                                type="file"
+                                accept="image/*"
+                                class="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70"
+                                @change="onLogoChange"
+                            >
+                        </div>
+                        <p v-if="settingsErrors.logo" class="mt-1 text-sm text-destructive">{{ settingsErrors.logo[0] }}</p>
+                    </div>
                     <div>
                         <Label for="org_name">Nama Instansi</Label>
                         <Input id="org_name" v-model="settingsForm.org_name" class="mt-1" required />
@@ -176,7 +286,6 @@ async function removeCategory(category) {
                         Tampilkan banner di halaman publik
                     </label>
 
-                    <p v-if="settingsSaved" class="text-sm text-accent">Pengaturan tersimpan.</p>
                     <Button type="submit" :disabled="settingsSubmitting">{{ settingsSubmitting ? 'Menyimpan...' : 'Simpan Pengaturan' }}</Button>
                 </form>
             </CardContent>

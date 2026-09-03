@@ -6,7 +6,7 @@ import { useSettingsStore } from '@/stores/settings';
 import { Button } from '@/components/ui/button';
 import NavDropdown from '@/components/layout/NavDropdown.vue';
 import { isLinkActive } from '@/lib/nav';
-import logoUrl from '@/assets/logo-ppid-umjambi.png';
+import defaultLogoUrl from '@/assets/logo-ppid-umjambi.png';
 import { Clock, LayoutDashboard, LogOut, Mail, Megaphone, Menu, MapPin, Phone, X } from '@lucide/vue';
 
 const auth = useAuthStore();
@@ -16,6 +16,7 @@ const mobileOpen = ref(false);
 
 onMounted(() => settingsStore.fetchSettings());
 
+const logoUrl = computed(() => settingsStore.settings?.logo_url || defaultLogoUrl);
 const orgName = computed(() => settingsStore.settings?.org_name || 'PPID UM Jambi');
 const orgEmail = computed(() => settingsStore.settings?.org_email || 'ppid@umjambi.ac.id');
 const orgPhone = computed(() => settingsStore.settings?.org_phone || '(0741) 60825');

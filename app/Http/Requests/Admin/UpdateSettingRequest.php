@@ -30,6 +30,7 @@ class UpdateSettingRequest extends FormRequest
             'response_deadline_days' => ['required', 'integer', 'min:1', 'max:60'],
             'banner_text' => ['nullable', 'string', 'max:500'],
             'banner_is_active' => ['boolean'],
+            'logo' => ['nullable', 'file', 'image', 'max:2048'],
         ];
     }
 }
