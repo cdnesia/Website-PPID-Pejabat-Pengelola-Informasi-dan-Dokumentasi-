@@ -19,7 +19,7 @@ const isActive = () => props.links.some((link) => route.path === parseLinkTarget
 <template>
     <DropdownMenuRoot v-model:open="open">
         <DropdownMenuTrigger
-            class="flex h-full items-center gap-1 border-b-2 border-transparent px-3 text-sm font-semibold text-muted-foreground transition-colors outline-none hover:text-foreground"
+            class="flex h-full cursor-pointer items-center gap-1 border-b-2 border-transparent px-3 text-sm font-semibold text-muted-foreground transition-colors outline-none hover:text-foreground"
             :class="isActive() && 'border-primary text-primary hover:text-primary'"
         >
             {{ label }}
