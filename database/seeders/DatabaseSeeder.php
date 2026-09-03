@@ -19,6 +19,12 @@ class DatabaseSeeder extends Seeder
         $this->call(RolesAndPermissionsSeeder::class);
         $this->call(PageSeeder::class);
 
+        if (app()->environment('production')) {
+            $this->call(ProductionUserSeeder::class);
+
+            return;
+        }
+
         $superAdmin = User::factory()->create([
             'name' => 'Super Admin PPID',
             'email' => 'superadmin@ppid.test',
