@@ -31,7 +31,7 @@ class PublicInformationController extends Controller
     public function store(StorePublicInformationRequest $request): PublicInformationResource
     {
         $information = PublicInformation::create([
-            ...$request->safe()->all(),
+            ...$this->withPublishedAt($request->safe()->all()),
             'slug' => Str::slug($request->validated('title')).'-'.Str::random(6),
             'created_by' => $request->user()->id,
         ]);
@@ -43,9 +43,33 @@ class PublicInformationController extends Controller
         UpdatePublicInformationRequest $request,
         PublicInformation $information,
     ): PublicInformationResource {
-        $information->update($request->safe()->all());
+        $information->update($this->withPublishedAt($request->safe()->all(), $information));
 
         return new PublicInformationResource($information->load(['category', 'workUnit']));
+    }
+
+    /**
+     * Keep `published_at` in sync with the `status` field when the request
+     * does not explicitly set a publish date.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function withPublishedAt(array $data, ?PublicInformation $information = null): array
+    {
+        if (array_key_exists('published_at', $data) && $data['published_at']) {
+            return $data;
+        }
+
+        $status = $data['status'] ?? $information?->status;
+
+        if ($status === 'published') {
+            $data['published_at'] = $information?->published_at ?? now();
+        } elseif ($status === 'draft') {
+            $data['published_at'] = null;
+        }
+
+        return $data;
     }
 
     public function destroy(PublicInformation $information): Response
