@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import NavDropdown from '@/components/layout/NavDropdown.vue';
 import { isLinkActive } from '@/lib/nav';
 import defaultLogoUrl from '@/assets/logo-ppid-umjambi.png';
-import { Clock, LayoutDashboard, LogOut, Mail, Megaphone, Menu, MapPin, Phone, X } from '@lucide/vue';
+import { Clock, FileText, LayoutDashboard, LogOut, Mail, Megaphone, Menu, MapPin, Phone, X } from '@lucide/vue';
 
 const auth = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -127,11 +127,11 @@ const mobileGroups = [
                         </Button>
                     </template>
                     <template v-else>
-                        <RouterLink to="/auth/login">
-                            <Button size="sm" variant="outline">Masuk</Button>
-                        </RouterLink>
-                        <RouterLink to="/auth/register">
-                            <Button size="sm">Daftar</Button>
+                        <RouterLink to="/permohonan/buat">
+                            <Button size="sm">
+                                <FileText class="h-4 w-4" />
+                                Ajukan Permohonan
+                            </Button>
                         </RouterLink>
                     </template>
                 </div>
@@ -207,11 +207,11 @@ const mobileGroups = [
                         </Button>
                     </template>
                     <template v-else>
-                        <RouterLink to="/auth/login" @click="mobileOpen = false">
-                            <Button size="sm" variant="outline" class="w-full">Masuk</Button>
-                        </RouterLink>
-                        <RouterLink to="/auth/register" @click="mobileOpen = false">
-                            <Button size="sm" class="w-full">Daftar</Button>
+                        <RouterLink to="/permohonan/buat" @click="mobileOpen = false">
+                            <Button size="sm" class="w-full">
+                                <FileText class="h-4 w-4" />
+                                Ajukan Permohonan
+                            </Button>
                         </RouterLink>
                     </template>
                 </div>
