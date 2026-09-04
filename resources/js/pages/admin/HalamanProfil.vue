@@ -287,13 +287,7 @@ onMounted(loadList);
                             </div>
 
                             <div>
-                                <div class="flex items-center justify-between">
-                                    <Label>Misi</Label>
-                                    <Button type="button" size="sm" variant="outline" @click="addMisi">
-                                        <Plus class="h-4 w-4" />
-                                        Tambah Poin
-                                    </Button>
-                                </div>
+                                <Label>Misi</Label>
                                 <div class="mt-2 flex flex-col gap-2">
                                     <div v-for="(item, index) in misi" :key="index" class="flex items-center gap-2">
                                         <Input v-model="misi[index]" class="flex-1" />
@@ -303,17 +297,15 @@ onMounted(loadList);
                                     </div>
                                     <p v-if="!misi.length" class="text-sm text-muted-foreground">Belum ada poin misi.</p>
                                 </div>
+                                <Button type="button" size="sm" variant="outline" class="mt-3" @click="addMisi">
+                                    <Plus class="h-4 w-4" />
+                                    Tambah Poin
+                                </Button>
                             </div>
                         </template>
 
                         <div v-else-if="kind === 'items'">
-                            <div class="flex items-center justify-between">
-                                <Label>Daftar Item</Label>
-                                <Button type="button" size="sm" variant="outline" @click="addItem">
-                                    <Plus class="h-4 w-4" />
-                                    Tambah Item
-                                </Button>
-                            </div>
+                            <Label>Daftar Item</Label>
                             <div class="mt-2 flex flex-col gap-3">
                                 <div v-for="(item, index) in items" :key="index" class="rounded-lg border border-border p-3">
                                     <div class="flex items-start gap-2">
@@ -328,6 +320,10 @@ onMounted(loadList);
                                 </div>
                                 <p v-if="!items.length" class="text-sm text-muted-foreground">Belum ada item.</p>
                             </div>
+                            <Button type="button" size="sm" variant="outline" class="mt-3" @click="addItem">
+                                <Plus class="h-4 w-4" />
+                                Tambah Item
+                            </Button>
                         </div>
 
                         <Button type="submit" :disabled="submitting">{{ submitting ? 'Menyimpan...' : 'Simpan Perubahan' }}</Button>
