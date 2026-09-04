@@ -43,24 +43,27 @@ class PageSeeder extends Seeder
             [
                 'slug' => 'tugas-fungsi',
                 'title' => 'Tugas Pokok dan Fungsi',
-                'subtitle' => 'Tanggung jawab utama PPID dalam pengelolaan dan pelayanan informasi publik.',
+                'subtitle' => 'Tugas dan fungsi PPID berdasarkan jabatan dalam pengelolaan dan pelayanan informasi publik.',
                 'content' => [
                     'items' => [
                         [
-                            'title' => 'Penyimpanan dan Pendokumentasian',
-                            'description' => 'Menyimpan, mendokumentasikan, dan menyediakan seluruh informasi publik yang berada di bawah kewenangan instansi.',
+                            'title' => 'Atasan PPID',
+                            'description' => '<ul><li>Menetapkan kebijakan pelayanan informasi publik di lingkungan instansi.</li>'
+                                .'<li>Bertanggung jawab atas pelaksanaan keterbukaan informasi publik secara keseluruhan.</li>'
+                                .'<li>Menetapkan pertimbangan tertulis atas kebijakan yang bersifat mendasar dan berdampak luas.</li></ul>',
                         ],
                         [
-                            'title' => 'Pelayanan Informasi',
-                            'description' => 'Menerima, memproses, dan menjawab permohonan informasi publik yang diajukan oleh masyarakat.',
+                            'title' => 'PPID Utama',
+                            'description' => '<ul><li>Mengoordinasikan seluruh pelayanan informasi publik di tingkat instansi.</li>'
+                                .'<li>Menyimpan, mendokumentasikan, dan menyediakan informasi publik yang berada di bawah kewenangannya.</li>'
+                                .'<li>Menerima, memproses, dan menjawab permohonan informasi publik dari masyarakat.</li>'
+                                .'<li>Melakukan pengujian konsekuensi atas informasi yang dikecualikan.</li></ul>',
                         ],
                         [
-                            'title' => 'Pengujian Konsekuensi',
-                            'description' => 'Melakukan pengujian konsekuensi atas informasi yang dikecualikan sebelum menyatakan suatu informasi tidak dapat diakses publik.',
-                        ],
-                        [
-                            'title' => 'Koordinasi Antar Unit',
-                            'description' => 'Mengoordinasikan pemberian informasi publik yang melibatkan unit kerja lain di lingkungan instansi.',
+                            'title' => 'PPID Pembantu',
+                            'description' => '<ul><li>Membantu PPID Utama dalam pengumpulan dan penyediaan informasi dari unit kerja masing-masing.</li>'
+                                .'<li>Mengoordinasikan pemberian informasi publik yang melibatkan unit kerjanya.</li>'
+                                .'<li>Menyampaikan informasi dan dokumentasi kepada PPID Utama secara berkala.</li></ul>',
                         ],
                     ],
                 ],

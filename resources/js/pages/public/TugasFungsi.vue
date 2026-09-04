@@ -23,18 +23,20 @@ onMounted(async () => {
         <PageHeader v-if="page" :title="page.title" :subtitle="page.subtitle" />
         <div class="mx-auto max-w-4xl px-4 py-12">
             <p v-if="loading" class="text-sm text-muted-foreground">Memuat...</p>
-            <div v-else-if="page" class="grid gap-4 sm:grid-cols-2">
+            <div v-else-if="page" class="flex flex-col gap-4">
                 <div
                     v-for="(item, index) in page.content.items"
                     :key="item.title"
-                    v-reveal="(index % 2) * 100"
-                    class="rounded-2xl border border-border bg-card p-5 shadow-sm"
+                    v-reveal="index * 80"
+                    class="rounded-2xl border border-border bg-card p-6 shadow-sm"
                 >
-                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <ScrollText class="h-5 w-5" />
-                    </span>
-                    <p class="mt-3 text-sm font-semibold text-foreground">{{ item.title }}</p>
-                    <p class="mt-1 text-sm text-muted-foreground">{{ item.description }}</p>
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                            <ScrollText class="h-5 w-5" />
+                        </span>
+                        <p class="text-base font-semibold text-foreground">{{ item.title }}</p>
+                    </div>
+                    <div class="prose-content mt-3 text-sm text-muted-foreground" v-html="item.description" />
                 </div>
             </div>
         </div>

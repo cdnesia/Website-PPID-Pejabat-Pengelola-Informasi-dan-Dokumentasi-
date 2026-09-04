@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import RichTextEditor from '@/components/ui/editor/RichTextEditor.vue';
 import { toast } from '@/lib/toast';
 import { ImageOff, Plus, Trash2 } from '@lucide/vue';
 
@@ -42,6 +43,11 @@ const kind = computed(() => {
 });
 
 const imageLabel = computed(() => (activeSlug.value === 'alur-layanan' ? 'Gambar Alur Layanan' : 'Bagan Struktur Organisasi (opsional)'));
+
+const isJabatanItems = computed(() => activeSlug.value === 'tugas-fungsi');
+const itemsLabel = computed(() => (isJabatanItems.value ? 'Daftar Jabatan' : 'Daftar Item'));
+const itemTitlePlaceholder = computed(() => (isJabatanItems.value ? 'Nama Jabatan, mis. PPID Utama' : 'Judul'));
+const itemAddLabel = computed(() => (isJabatanItems.value ? 'Tambah Jabatan' : 'Tambah Item'));
 
 async function loadList() {
     loadingList.value = true;
@@ -305,13 +311,18 @@ onMounted(loadList);
                         </template>
 
                         <div v-else-if="kind === 'items'">
-                            <Label>Daftar Item</Label>
+                            <Label>{{ itemsLabel }}</Label>
                             <div class="mt-2 flex flex-col gap-3">
                                 <div v-for="(item, index) in items" :key="index" class="rounded-lg border border-border p-3">
                                     <div class="flex items-start gap-2">
                                         <div class="flex-1 space-y-2">
-                                            <Input v-model="item.title" placeholder="Judul" />
-                                            <Textarea v-model="item.description" placeholder="Deskripsi" rows="2" />
+                                            <Input v-model="item.title" :placeholder="itemTitlePlaceholder" />
+                                            <RichTextEditor
+                                                v-if="isJabatanItems"
+                                                v-model="item.description"
+                                                placeholder="Uraikan tugas dan fungsi jabatan ini..."
+                                            />
+                                            <Textarea v-else v-model="item.description" placeholder="Deskripsi" rows="2" />
                                         </div>
                                         <Button type="button" size="sm" variant="ghost" class="text-destructive" @click="removeItem(index)">
                                             <Trash2 class="h-4 w-4" />
@@ -322,7 +333,7 @@ onMounted(loadList);
                             </div>
                             <Button type="button" size="sm" variant="outline" class="mt-3" @click="addItem">
                                 <Plus class="h-4 w-4" />
-                                Tambah Item
+                                {{ itemAddLabel }}
                             </Button>
                         </div>
 
